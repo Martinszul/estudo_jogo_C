@@ -1,0 +1,24 @@
+#include <GL/freeglut.h>
+
+void display (){
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glColor3f(0,1,1);//cor do carrinho
+
+    glBegin(GL_QUADS); //vertices do carrinho
+        glVertex2f(0,0.5);// 1 plano +x+y
+        glVertex2f(-0.5,0.5);// 2 plano -x+y
+        glVertex2f(-0.5,-0.5);// 3 plano -x-y
+        glVertex2f(0,-0.5);// 4 plano +x-y
+    glEnd();
+
+    glFlush();
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);//criação da janela
+    glutCreateWindow("jogador");
+
+    glutDisplayFunc(display);
+    glutMainLoop();
+}
