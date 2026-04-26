@@ -1,0 +1,78 @@
+#include <GL/freeglut.h>
+
+float pos = 1;
+
+void display() {
+
+    glClear(GL_COLOR_BUFFER_BIT);//quadradro
+
+    glPushMatrix();
+    glTranslatef(0,pos,0);// faz ele andar
+
+glClear(GL_COLOR_BUFFER_BIT);
+
+    glColor3f(1,1,0);
+
+    glBegin(GL_QUADS);// obstaculo 1 esquerdo
+        glVertex2f(-0.3,0.5);//vertice CIMA ESQ
+        glVertex2f(-0.7,0.5);//vertive CIMA DIR
+        glVertex2f(-0.7,-0.5);//vertice BAIX ESQ
+        glVertex2f(-0.3,-0.5);//vertice BAIX DIR
+    glEnd();
+
+    glFlush();
+
+    glTranslatef(0,pos,0);// faz ele andar
+
+    glColor3f(1,0,0);// obstaculo 2 direito
+
+    glBegin(GL_QUADS);
+        glVertex2f(0.3,0.5);// vertice CIMA ESQ
+        glVertex2f(0.7,0.5);// vertice CIMA DIR
+        glVertex2f(0.7,-0.5);// vertice BAIX ESQ
+        glVertex2f(0.3,-0.5);// vertice BAIX DIR
+    glEnd();
+
+    glFlush();
+   
+    glTranslatef(0,pos,0); // faz ele andar
+
+    glColor3f(1,1,1);// obstaculo 3 meio
+
+    glBegin(GL_QUADS);
+        glVertex2f(0.2,0.5);// vertice CIMA ESQ
+        glVertex2f(-0.2,0.5);// vertice CIMA DIR
+        glVertex2f(-0.2,-0.5);// vertice BAIX ESQ
+        glVertex2f(0.2,-0.5);// vertice BAIX DIR
+    glEnd();
+
+    glFlush();
+
+    glPopMatrix();
+
+    glutSwapBuffers();
+}
+
+void update(int value){
+
+    pos -= 0.01;
+
+    if(pos > 1)
+        pos = -1; //possição onde aparece
+
+    glutPostRedisplay();
+    glutTimerFunc(16,update,0);
+}
+
+int main(int argc, char** argv){
+
+    glutInit(&argc,argv);
+    glutInitDisplayMode(GLUT_DOUBLE);
+    glutCreateWindow("Animacao");
+
+    glutDisplayFunc(display);
+
+    glutTimerFunc(16,update,0);
+
+    glutMainLoop();
+}
