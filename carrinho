@@ -1,7 +1,14 @@
 #include <GL/freeglut.h>
 
+float x = 0;
+float y = 0;
+
 void display (){
+
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glPushMatrix();
+    glTranslatef(x,y,0);
 
     glColor3f(0,1,1);//cor do carrinho
 
@@ -12,13 +19,34 @@ void display (){
         glVertex2f(0,-0.5);// 4 plano +x-y
     glEnd();
 
+    glPopMatrix();
+
     glFlush();
 }
+void keyboard(unsigned char key, int xmouse, int ymouse){
+
+    if(key == 'a')
+        x -= 0.05;
+
+    if(key == 'd')
+        x += 0.05;
+    
+    if(key == 'w')
+        y += 0.05;
+
+    if(key == 's')
+        y -= 0.05;
+
+    glutPostRedisplay();
+}
+
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);//criação da janela
     glutCreateWindow("jogador");
 
     glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
+
     glutMainLoop();
 }
