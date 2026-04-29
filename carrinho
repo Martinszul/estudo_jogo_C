@@ -1,7 +1,10 @@
+#include <GL/glut.h>
 #include <GL/freeglut.h>
 
 float x = 0;
 float y = 0;
+
+
 
 void display (){
 
@@ -13,17 +16,17 @@ void display (){
     glColor3f(0,1,1);//cor do carrinho
 
     glBegin(GL_QUADS); //vertices do carrinho
-        glVertex2f(0,0.5);// 1 plano +x+y
-        glVertex2f(-0.5,0.5);// 2 plano -x+y
-        glVertex2f(-0.5,-0.5);// 3 plano -x-y
-        glVertex2f(0,-0.5);// 4 plano +x-y
+        glVertex2f(0,0.05);// 1 plano +x+y
+        glVertex2f(-0.05,0.05);// 2 plano -x+y
+        glVertex2f(-0.05,-0.05);// 3 plano -x-y
+        glVertex2f(0,-0.05);// 4 plano +x-y
     glEnd();
 
     glPopMatrix();
 
     glFlush();
 }
-void keyboard(unsigned char key, int xmouse, int ymouse){
+void keyboard(unsigned char key, int xmouse, int ymouse){ //faz ele andar nas direções do teclado
 
     if(key == 'a')
         x -= 0.05;
@@ -43,10 +46,10 @@ void keyboard(unsigned char key, int xmouse, int ymouse){
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);//criação da janela
+    glutInitWindowSize(800,600);
     glutCreateWindow("jogador");
-
     glutDisplayFunc(display);
-    glutKeyboardFunc(keyboard);
+    glutKeyboardFunc(keyboard);// captura os botões apertados
 
     glutMainLoop();
 }
