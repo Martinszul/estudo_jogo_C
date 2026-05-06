@@ -5,6 +5,9 @@
 int moveEsq, moveDir, moveCima, moveBaixo;
 float xPOS, yPOS;
 
+//obstaculo desce
+float pos = 1;
+
 // MAPA
 float descerMapa = 0.0;
 float tamanhoX = 0.056;
@@ -104,10 +107,61 @@ void estrada1Rodar(){
         }
     }
 }
+//obstaculo 1
+int obstaculo1[20][10] = {
+    {0, 0, 0, 2, 2, 2, 2, 0, 0, 0},
+    {0, 0, 2, 2, 2, 2, 2, 2, 0, 0},
+    {0, 2, 3, 3, 2, 2, 3, 3, 2, 0},
+    {1, 2, 2, 2, 2, 2, 2, 2, 2, 1},
+    {1, 2, 2, 1, 1, 1, 1, 2, 2, 1},
+    {1, 2, 1, 1, 1, 1, 1, 1, 2, 1},
+    {0, 2, 1, 1, 1, 1, 1, 1, 2, 0},
+    {0, 2, 1, 3, 2, 2, 3, 1, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {1, 2, 2, 3, 2, 2, 3, 2, 2, 1},
+    {1, 2, 2, 1, 1, 1, 1, 2, 2, 1},
+    {1, 2, 2, 2, 1, 1, 2, 2, 2, 1},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
 
+};
 
+//COR DO obstaculo
+void obstaculo1Rodar(){
+     for(int l = 0; l < 20; l++){
+        for(int c = 0; c < 10; c++){
+              if(obstaculo1[l][c] != 0){
+                 if(obstaculo1[l][c] == 1) glColor3ub(0, 0, 0); if(obstaculo1[l][c] == 2) glColor3ub(255,255,0); if(obstaculo1[l][c] == 3) glColor3ub(255,255,255);
+            
+                 float x = c * 0.0090 - 0.09; float y = -l * 0.0090 - 0.011;
 
+                glBegin(GL_QUADS);
+                    glVertex2f(x, y);
+                    glVertex2f(x + 0.0090, y);
+                    glVertex2f(x + 0.0090, y + 0.0090);
+                    glVertex2f(x, y + 0.0090);
+                glEnd();
+            }
+        }
+    }
+}
 
+//fazer obstaculo descer
+void update(int value){
+
+    pos -= 0.01;
+
+    if(pos < -1.1)
+        pos = 1;
+
+    glutPostRedisplay();
+    glutTimerFunc(16,update,0);
+}
 
 
 void teclaMovendo(unsigned char key, int a, int b){
@@ -142,18 +196,33 @@ void display(){
     glTranslated(xPOS, yPOS,0);
     carrinhoRodar();
     glPopMatrix();
+    glPushMatrix();
+    glTranslatef(0,pos,0);
+    obstaculo1Rodar();
+    glPopMatrix();
     glFlush();
 }
 
 int main(int argc, char** argv){
     glutInit(&argc, argv);
+    
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    
     glutInitWindowSize(800,600);
+    
     glutCreateWindow("Jogo Dois");
+    
     glClearColor(0.2, 0.2, 0.2, 1.0);
+    
     glutKeyboardFunc(teclaMovendo);
+    
     glutKeyboardUpFunc(teclaSolta);
+    
     glutTimerFunc(16, caminhar, 0);
+    
     glutDisplayFunc(display);
+    
+    glutTimerFunc(16,update,0);
+    
     glutMainLoop();
 }
