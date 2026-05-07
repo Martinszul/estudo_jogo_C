@@ -47,7 +47,7 @@ void carrinhoRodar(){
               if(carrinho[l][c] != 0){
                  if(carrinho[l][c] == 1) glColor3ub(0, 0, 0); if(carrinho[l][c] == 2) glColor3ub(255,0,0); if(carrinho[l][c] == 3) glColor3ub(255,255,255);
             
-                 float x = c * 0.0090 - 0.045; float y = -l * 0.0090 - 0.011;
+                 float x = c * 0.0090 - 0.045; float y = -l * 0.0090 - 0.4;
 
                 glBegin(GL_QUADS);
                     glVertex2f(x, y);
@@ -161,8 +161,8 @@ void update(int value){
     posY -= 0.01;
 
     if(posY < -1.1){
-        posY = 2.0;
-        posX = ((rand() % 125) / 100.0) - 0.65;
+        posY = 1.3;
+        posX = ((rand() % 125) / 100.0) - 0.55;
     }
     glutPostRedisplay();
     glutTimerFunc(8,update,0);
