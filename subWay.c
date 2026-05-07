@@ -7,8 +7,8 @@ int moveEsq, moveDir, moveCima, moveBaixo;
 float xPOS, yPOS;
 
 //obstaculo desce
-float posY = 1.5;
-float posX = 0.0;
+float posY = 1.0;
+float posX = -1.5;
 
 // MAPA
 float descerMapa = 0.0;
@@ -137,7 +137,7 @@ int obstaculo1[20][10] = {
 
 //COR DO obstaculo
 void obstaculo1Rodar(){
-     for(int l = 0; l < 20; l++){
+     for(int l = 0; l < 20; l++){//dimensões definido junto com a matriz
         for(int c = 0; c < 10; c++){
               if(obstaculo1[l][c] != 0){
                  if(obstaculo1[l][c] == 1) glColor3ub(0, 0, 0); if(obstaculo1[l][c] == 2) glColor3ub(255,255,0); if(obstaculo1[l][c] == 3) glColor3ub(255,255,255);
@@ -162,10 +162,10 @@ void update(int value){
 
     if(posY < -1.1){
         posY = 1.5;
-        posX = ((rand() % 110) / 100.0) - 0.55;
+        posX = -0.25 + 0.09;
     }
     glutPostRedisplay();
-    glutTimerFunc(8,update,0);
+    glutTimerFunc(2,update,0);
 }
 
 
