@@ -1,10 +1,14 @@
 #include <GL/freeglut.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
 // JOGADOR
 int moveEsq, moveDir, moveCima, moveBaixo;
 float xPOS, yPOS;
+char texto[20];
+int vida = 3;
+int emColisao = 0;
 
 //obstaculo desce
 float posY = 1.0;
@@ -47,7 +51,7 @@ void carrinhoRodar(){
               if(carrinho[l][c] != 0){
                  if(carrinho[l][c] == 1) glColor3ub(0, 0, 0); if(carrinho[l][c] == 2) glColor3ub(255,0,0); if(carrinho[l][c] == 3) glColor3ub(255,255,255);
             
-                 float x = c * 0.0090 - 0.045; float y = -l * 0.0090 - 0.011;
+                float x = c * 0.0090 - 0.045; float y = -l * 0.0090 - 0.011;
 
                 glBegin(GL_QUADS);
                     glVertex2f(x, y);
@@ -165,15 +169,21 @@ void update(int value){
         posX = -0.25 + 0.09;
     }
     glutPostRedisplay();
-    glutTimerFunc(2,update,0);
+    glutTimerFunc(5,update,0);
 }
-
 
 void teclaMovendo(unsigned char key, int a, int b){
     if(key == 'a') moveEsq = 1;
     if(key == 'd') moveDir = 1;
     if(key == 'w') moveCima = 1;
     if(key == 's') moveBaixo = 1;
+    if(key == 'r' && vida <= 0){
+        vida = 3;
+        posY = 1.0;
+        posX = -1.5;
+        xPOS = 0.0;
+        yPOS = 0.0;
+    }
 }
 
 void teclaSolta(unsigned char key, int a, int b){
@@ -194,9 +204,46 @@ void caminhar(int valor){
     if(xPOS < -limiteX) xPOS = -limiteX;
     if(yPOS < -limiteY) yPOS = -limiteY;
     if(yPOS > limiteY) yPOS = limiteY;
-    
-    glutTimerFunc(2, caminhar, 0);
+    if(vida == 0){
+        xPOS = 5.0;
+        posX = -5.0;
+    }
+    glutTimerFunc(5, caminhar, 0);
     glutPostRedisplay();
+}
+
+void placarVida(){
+    glColor3ub(255, 255, 255);
+    glRasterPos2f(-0.93, 0.8);
+    sprintf(texto, "Vidas: %d", vida);
+    for(int i = 0; texto[i] != '\0'; i++){
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, texto[i]);
+    }
+}
+
+void colisao(){
+    float dx = xPOS - posX;
+    float dy = yPOS - posY;
+
+    if(dx < 0.09 && dx > -0.09 && dy < 0.18 && dy > -0.18){
+        if(emColisao == 0){
+            vida = vida - 1;
+            emColisao = 1;
+        }
+    } else {
+        emColisao = 0;
+    }
+}
+
+void gameOver(){
+    if(vida == 0){
+        glColor3ub(0, 0, 0);
+        glRasterPos2f(-0.15, 0.0);
+        sprintf(texto, "FIM DE JOGO !");
+        for(int i = 0; texto[i] != '\0'; i++){
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, texto[i]);
+        }
+    }
 }
 
 void display(){
@@ -210,6 +257,9 @@ void display(){
     glTranslatef(posX,posY,0);
     obstaculo1Rodar();
     glPopMatrix();
+    placarVida();
+    colisao();
+    gameOver();
     glFlush();
 }
 
