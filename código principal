@@ -294,9 +294,11 @@ int main(int argc, char** argv){
     
     glutTimerFunc(16, caminhar, 0);
     
-    glutDisplayFunc(display);
+    glutTimerFunc(16,update2,0);
     
     glutTimerFunc(16,update,0);
-    
+
+    glutDisplayFunc(display);
+        
     glutMainLoop();
 }
