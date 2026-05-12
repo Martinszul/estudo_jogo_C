@@ -3,25 +3,24 @@
 #include <time.h>
 #include <stdio.h>
 
-// JOGADOR
+// ==== Variáveis do jogador ===
 int moveEsq, moveDir, moveCima, moveBaixo;
 float xPOS, yPOS;
 char texto[20];
 int vida = 3;
 int emColisao = 0;
 
-//obstaculo desce
+// === Variável do obstáculo ===
 float posY = 1.0;
 float posX = -1.5;
 
-// MAPA
-float descerMapa = 0.0;
+// === Configurações do mapa ====
 float tamanhoX = 0.056;
 float tamanhoY = 0.08;
 float limiteX = 0.6;
 float limiteY = 0.84;
 
-//IMAGEM DO CARRO JOGADORORR
+// === Sprite do carro do jogador ===
 int carrinho[20][10] = {
     {0, 0, 0, 2, 2, 2, 2, 0, 0, 0},
     {0, 0, 2, 2, 2, 2, 2, 2, 0, 0},
@@ -44,14 +43,15 @@ int carrinho[20][10] = {
     {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
 };
 
-//COR DO CARRO JOGADOR
+// === Renderiza o carro do jogador ===
 void carrinhoRodar(){
      for(int l = 0; l < 20; l++){
         for(int c = 0; c < 10; c++){
               if(carrinho[l][c] != 0){
                  if(carrinho[l][c] == 1) glColor3ub(0, 0, 0); if(carrinho[l][c] == 2) glColor3ub(255,0,0); if(carrinho[l][c] == 3) glColor3ub(255,255,255);
             
-                float x = c * 0.0090 - 0.045; float y = -l * 0.0090 - 0.011;
+                float x = c * 0.0090 - 0.045; 
+                float y = -l * 0.0090 - 0.011;
 
                 glBegin(GL_QUADS);
                     glVertex2f(x, y);
@@ -64,58 +64,7 @@ void carrinhoRodar(){
     }
 }
 
-int estrada1[25][25] = {
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-};
-
-void estrada1Rodar(){
-
-    for(int l = 0; l < 25; l++){
-        for(int c = 0; c  < 25; c++){
-            if(estrada1[l][c] != 10){
-                if(estrada1[l][c] == 0) glColor3ub(128, 128, 128); if(estrada1[l][c] == 1) glColor3ub(255, 255, 255);
-                if(estrada1[l][c] == 3) glColor3ub(255, 0, 0);
-
-                float x = -0.7 + c * tamanhoX; float y = -1.0 + l * tamanhoY;
-
-                glBegin(GL_QUADS);
-                    glVertex2f(x, y);
-                    glVertex2f(x + tamanhoX, y);
-                    glVertex2f(x + tamanhoX, y + tamanhoY);
-                    glVertex2f(x, y + tamanhoY);
-                glEnd();
-
-                
-            }
-        }
-    }
-}
-
-//obstaculo 1
+// === Sprite do obstáculo (carro amarelo) ===
 int obstaculo1[20][10] = {
     {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
     {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
@@ -139,9 +88,9 @@ int obstaculo1[20][10] = {
     {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
 
-//COR DO obstaculo
+// === Renderiza o carro obstáculo ===
 void obstaculo1Rodar(){
-     for(int l = 0; l < 20; l++){//dimensões definido junto com a matriz
+     for(int l = 0; l < 20; l++){
         for(int c = 0; c < 10; c++){
               if(obstaculo1[l][c] != 0){
                  if(obstaculo1[l][c] == 1) glColor3ub(0, 0, 0); if(obstaculo1[l][c] == 2) glColor3ub(255,255,0); if(obstaculo1[l][c] == 3) glColor3ub(255,255,255);
@@ -159,9 +108,8 @@ void obstaculo1Rodar(){
     }
 }
 
-//fazer obstaculo descer
+// === Lógica de movimento do obstáculo ===
 void update(int value){
-    
     posY -= 0.01;
 
     if(posY < -1.1){
@@ -172,6 +120,57 @@ void update(int value){
     glutTimerFunc(5,update,0);
 }
 
+// === Mapa da estrada ===
+int mapa[25][25] = {
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+};
+
+// === Renderiza o mapa ===
+void mapaRodar(){
+    for(int l = 0; l < 25; l++){
+        for(int c = 0; c  < 25; c++){
+            if(mapa[l][c] != 10){
+                if(mapa[l][c] == 0) glColor3ub(128, 128, 128); if(mapa[l][c] == 1) glColor3ub(255, 255, 255); if(mapa[l][c] == 3) glColor3ub(255, 0, 0);
+
+                float x = -0.7 + c * tamanhoX; 
+                float y = -1.0 + l * tamanhoY;
+
+                glBegin(GL_QUADS);
+                    glVertex2f(x, y);
+                    glVertex2f(x + tamanhoX, y);
+                    glVertex2f(x + tamanhoX, y + tamanhoY);
+                    glVertex2f(x, y + tamanhoY);
+                glEnd();
+            }
+        }
+    }
+}
+
+// === Registra quais teclas estão pressionadas ===
 void teclaMovendo(unsigned char key, int a, int b){
     if(key == 'a') moveEsq = 1;
     if(key == 'd') moveDir = 1;
@@ -186,6 +185,7 @@ void teclaMovendo(unsigned char key, int a, int b){
     }
 }
 
+// === Detecta quando uma tecla foi solta e desativa o movimento correspondente ===
 void teclaSolta(unsigned char key, int a, int b){
     if(key == 'a') moveEsq = 0;
     if(key == 'd') moveDir = 0;
@@ -193,7 +193,8 @@ void teclaSolta(unsigned char key, int a, int b){
     if(key == 's') moveBaixo = 0;
 }
 
-void caminhar(int valor){
+// === Movimento do jogador e Limite do mapa ===
+void moverJogador(int valor){
     float velocidadeCaminhar = 0.0050;
     if(moveEsq) xPOS -= velocidadeCaminhar;
     if(moveDir) xPOS += velocidadeCaminhar; 
@@ -208,19 +209,11 @@ void caminhar(int valor){
         xPOS = 5.0;
         posX = -5.0;
     }
-    glutTimerFunc(5, caminhar, 0);
+    glutTimerFunc(5, moverJogador, 0);
     glutPostRedisplay();
 }
 
-void placarVida(){
-    glColor3ub(255, 255, 255);
-    glRasterPos2f(-0.93, 0.8);
-    sprintf(texto, "Vidas: %d", vida);
-    for(int i = 0; texto[i] != '\0'; i++){
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, texto[i]);
-    }
-}
-
+// === Detecção de colisão ===
 void colisao(){
     float dx = xPOS - posX;
     float dy = yPOS - posY;
@@ -229,12 +222,29 @@ void colisao(){
         if(emColisao == 0){
             vida = vida - 1;
             emColisao = 1;
+            posY = 2.2;
         }
     } else {
         emColisao = 0;
     }
 }
 
+// === Placar de vida ===
+void placarVida(){
+    glColor3ub(255, 255, 255);
+    if(vida == 0){
+        glRasterPos2f(5.0, 5.0);
+    }
+    else{
+        glRasterPos2f(-0.93, 0.8);
+        sprintf(texto, "Vidas: %d", vida);
+        for(int i = 0; texto[i] != '\0'; i++){
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, texto[i]);
+        }
+    }
+}
+
+// === Tela fim de jogo ===
 void gameOver(){
     if(vida == 0){
         glColor3ub(0, 0, 0);
@@ -246,9 +256,10 @@ void gameOver(){
     }
 }
 
+// === Função principal de desenho — chamada a cada frame ===
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
-    estrada1Rodar();
+    mapaRodar();
     glPushMatrix();
     glTranslated(xPOS, yPOS,0);
     carrinhoRodar();
@@ -263,27 +274,18 @@ void display(){
     glFlush();
 }
 
+// === Inicialização do jogo ===
 int main(int argc, char** argv){
     glutInit(&argc, argv);
     srand(time(NULL));
-    
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    
     glutInitWindowSize(800,600);
-    
     glutCreateWindow("Jogo Dois");
-    
     glClearColor(0.2, 0.2, 0.2, 1.0);
-    
     glutKeyboardFunc(teclaMovendo);
-    
     glutKeyboardUpFunc(teclaSolta);
-    
-    glutTimerFunc(16, caminhar, 0);
-    
+    glutTimerFunc(16, moverJogador, 0);
     glutDisplayFunc(display);
-    
     glutTimerFunc(16,update,0);
-    
     glutMainLoop();
 }
