@@ -3,22 +3,27 @@
 #include <time.h>
 #include <stdio.h>
 
-// ==== Variáveis do jogador ===
+// ==== Variáveis do jogador ====
 int moveEsq, moveDir, moveCima, moveBaixo;
-float xPOS, yPOS;
+float POSxjg, POSyjg;
+// ==== Variáveis do placar ====
 char texto[20];
 int vida = 3;
+// ==== Variável da colisão ====
 int emColisao = 0;
 
-// === Variável do obstáculo ===
-float posY = 1.0;
-float posX = -1.5;
-float posy = 1.0;
-float posx = -1.5;
-float pos3y = -1.0;
-float pos3x = -1.5;
-float pos4y = -1.0;
-float pos4x = -1.5;
+// ==== Variáveis do obstáculo carro amarelo ====
+float posYcram = 1.0;
+float posXcram = -1.5;
+// ==== Variáveis do obstáculo carro verde ====
+float posycrve = 1.0;
+float posxcrve = -1.5;
+// ==== Variáveis do obstáculo carro azul ====
+float posycrzu = -1.0;
+float posxcrzu = -1.5;
+// ==== Variáveis do obstáculo carro rosa ====
+float posycros = -1.0;
+float posxcros = -1.5;
 
 // === Configurações do mapa ====
 float tamanhoX = 0.056;
@@ -117,14 +122,14 @@ void obstaculo1Rodar(){
 
 // === Lógica de movimento do obstáculo ===
 void update(int value){
-    posY -= 0.01;
+    posYcram -= 0.01;
 
-    if(posY < -1.1){
-        posY = 1.5;
-        posX = -0.46;
+    if(posYcram < -1.1){
+        posYcram = 1.5;
+        posXcram = -0.46;
     }
     glutPostRedisplay();
-    glutTimerFunc(10,update,0);
+    glutTimerFunc(6,update,0);
 }
 
 // === Sprite do obstáculo (carro verde) ===
@@ -174,14 +179,14 @@ void obstaculo2Rodar(){
 // === Lógica de movimento do obstáculo 2 ===
 void update2(int value){
     
-    posy -= 0.01;
+    posycrve -= 0.01;
 
-    if(posy < -1.1){
-        posy = 1.0;
-        posx = -0.11;
+    if(posycrve < -1.1){
+        posycrve = 1.0;
+        posxcrve = -0.11;
     }
     glutPostRedisplay();
-    glutTimerFunc(10,update2,0);
+    glutTimerFunc(4,update2,0);
 }
 // === Sprite do obstáculo (carro azul) ===
 int obstaculo3[20][10] = {
@@ -211,7 +216,7 @@ void obstaculo3Rodar(){
      for(int l = 0; l < 20; l++){//dimensões definido junto com a matriz
         for(int c = 0; c < 10; c++){
               if(obstaculo3[l][c] != 0){
-                 if(obstaculo3[l][c] == 1) glColor3ub(0, 0, 0); if(obstaculo3[l][c] == 2) glColor3ub(0,255,0); if(obstaculo3[l][c] == 3) glColor3ub(255,255,255);
+                 if(obstaculo3[l][c] == 1) glColor3ub(0, 0, 0); if(obstaculo3[l][c] == 2) glColor3ub(0,255,255); if(obstaculo3[l][c] == 3) glColor3ub(255,255,255);
             
                  float x = c * 0.0090 - 0.09; float y = -l * 0.0090 - 0.011;
 
@@ -229,36 +234,46 @@ void obstaculo3Rodar(){
 // === Lógica de movimento do obstáculo 3 subindo ===
 void update3(int value){
     
-    pos3y += 0.01;
+    posycrzu += 0.01;
 
-    if(pos3y > 1.1){
-        pos3y = -1.0;
-        pos3x = 0.20;
+    if(posycrzu > 1.1){
+        posycrzu = -1.0;
+        posxcrzu = 0.20;
     }
     glutPostRedisplay();
-    glutTimerFunc(10,update3,0);
+    glutTimerFunc(8,update3,0);
 }
 
-int pedra[10][10] = {
+int obstaculo4[20][10] = {
     {0, 0, 0, 2, 2, 2, 2, 0, 0, 0},
-    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
-    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
-    {2, 2, 2, 1, 1, 1, 1, 2, 2, 2},
-    {2, 2, 1, 1, 1, 1, 1, 1, 2, 2},
+    {0, 0, 2, 2, 2, 2, 2, 2, 0, 0},
+    {0, 2, 3, 3, 2, 2, 3, 3, 2, 0},
+    {1, 2, 2, 2, 2, 2, 2, 2, 2, 1},
+    {1, 2, 2, 1, 1, 1, 1, 2, 2, 1},
+    {1, 2, 1, 1, 1, 1, 1, 1, 2, 1},
     {0, 2, 1, 1, 1, 1, 1, 1, 2, 0},
-    {0, 2, 1, 2, 2, 2, 2, 1, 2, 0},
-    {0, 0, 2, 2, 2, 2, 2, 2, 0, 0},
-    {0, 0, 2, 2, 2, 2, 2, 2, 0, 0},
-    {0, 0, 0, 2, 2, 2, 2, 0, 0, 0},
+    {0, 2, 1, 3, 2, 2, 3, 1, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {1, 2, 2, 3, 2, 2, 3, 2, 2, 1},
+    {1, 2, 2, 1, 1, 1, 1, 2, 2, 1},
+    {1, 2, 2, 2, 1, 1, 2, 2, 2, 1},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
 };
 
-void pedraRodar(){
-     for(int l = 0; l < 10; l++){//dimensões definido junto com a matriz
+void obstaculo4Rodar(){
+     for(int l = 0; l < 20; l++){//dimensões definido junto com a matriz
         for(int c = 0; c < 10; c++){
-              if(pedra[l][c] != 0){
-                 if(pedra[l][c] == 1) glColor3ub(0, 0, 0); if(pedra[l][c] == 2) glColor3ub(165,165,165); if(pedra[l][c] == 3) glColor3ub(255,255,255);
+              if(obstaculo4[l][c] != 0){
+                 if(obstaculo4[l][c] == 1) glColor3ub(0, 0, 0); if(obstaculo4[l][c] == 2) glColor3ub(255,0,255); if(obstaculo4[l][c] == 3) glColor3ub(255,255,255);
             
-                 float x = c * 0.0090 -0.04 ; float y = -l * 0.0090 - 0.011;
+                 float x = c * 0.0090 + 0.09 ; float y = -l * 0.0090 - 0.011;
 
                 glBegin(GL_QUADS);
                     glVertex2f(x, y);
@@ -274,11 +289,11 @@ void pedraRodar(){
 //fazer pedra descer
 void update4(int value){
     
-    pos4y += 0.01;
+    posycros += 0.01;
 
-    if(pos4y > 1.1){
-        pos4y = 0;
-        pos4x = 0;
+    if(posycros > 1.1){
+        posycros = -1.65;
+        posxcros = 0.35;
     }
     glutPostRedisplay();
     glutTimerFunc(10,update4,0);
@@ -343,11 +358,11 @@ void teclaMovendo(unsigned char key, int a, int b){
     if(key == 's') moveBaixo = 1;
     if(key == 'r' && vida <= 0){
         vida = 3;
-        posY = 1.0;
-        posX = -1.5;
-        xPOS = 0.0;
-        yPOS = 0.0;
-        posx = 1.5;
+        posYcram = 1.0;
+        posXcram = -1.5;
+        POSxjg = 0.0;
+        POSyjg = 0.0;
+        posxcrve = 1.5;
         tamanhoX =  0.056;
     }
 }
@@ -363,20 +378,20 @@ void teclaSolta(unsigned char key, int a, int b){
 // === Movimento do jogador e Limite do mapa ===
 void moverJogador(int valor){
     float velocidadeCaminhar = 0.0050;
-    if(moveEsq) xPOS -= velocidadeCaminhar;
-    if(moveDir) xPOS += velocidadeCaminhar; 
-    if(moveCima) yPOS += velocidadeCaminhar;
-    if(moveBaixo) yPOS -= velocidadeCaminhar;
+    if(moveEsq) POSxjg -= velocidadeCaminhar;
+    if(moveDir) POSxjg += velocidadeCaminhar; 
+    if(moveCima) POSyjg += velocidadeCaminhar;
+    if(moveBaixo) POSyjg -= velocidadeCaminhar;
 
-    if(xPOS > limiteX) xPOS = limiteX;
-    if(xPOS < -limiteX) xPOS = -limiteX;
-    if(yPOS < -limiteY) yPOS = -limiteY;
-    if(yPOS > limiteY) yPOS = limiteY;
+    if(POSxjg > limiteX) POSxjg = limiteX;
+    if(POSxjg < -limiteX) POSxjg = -limiteX;
+    if(POSyjg < -limiteY) POSyjg = -limiteY;
+    if(POSyjg > limiteY) POSyjg = limiteY;
     if(vida == 0){
         tamanhoX = 0;
-        xPOS = 5.0;
-        posX = -5.0;
-        posx = -5.0;
+        POSxjg = 5.0;
+        posXcram = -5.0;
+        posxcrve = -5.0;
     }
     glutTimerFunc(5, moverJogador, 0);
     glutPostRedisplay();
@@ -384,16 +399,16 @@ void moverJogador(int valor){
 
 // === Detecção de colisão ===
 void colisao(){
-    float dx = xPOS - posX;
-    float dy = yPOS - posY;
-    float dxx = xPOS - posx;
-    float dyy = yPOS - posy;
+    float dx = POSxjg - posXcram;
+    float dy = POSyjg - posYcram;
+    float dxx = POSxjg - posxcrve;
+    float dyy = POSyjg - posycrve;
 
     if(dx < 0.09 && dx > -0.09 && dy < 0.18 && dy > -0.18){
         if(emColisao == 0){
             vida = vida - 1;
             emColisao = 1;
-            posY = 2.2;
+            posYcram = 2.2;
         } else {
         emColisao = 0;
     }
@@ -404,7 +419,7 @@ void colisao(){
         if(emColisao == 0){
             vida = vida - 1;
             emColisao = 1;
-            posy = 2.2;
+            posycrve = 2.2;
         }
     } else {
         emColisao = 0;
@@ -443,22 +458,25 @@ void gameOver(){
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
     mapaRodar();
-    pedraRodar();
     glPushMatrix();
-    glTranslated(xPOS, yPOS,0);
+    glTranslated(POSxjg, POSyjg,0);
     carrinhoRodar();
     glPopMatrix();
     glPushMatrix();
-    glTranslatef(posX,posY,0);
+    glTranslatef(posXcram,posYcram,0);
     obstaculo1Rodar();
     glPopMatrix();
     glPushMatrix();
-    glTranslatef(posx,posy,0);
+    glTranslatef(posxcrve,posycrve,0);
     obstaculo2Rodar();
     glPopMatrix();
     glPushMatrix();
-    glTranslatef(pos3x,pos3y,0);
+    glTranslatef(posxcrzu,posycrzu,0);
     obstaculo3Rodar();
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef(posxcros,posycros,0);
+    obstaculo4Rodar();
     glPopMatrix();
     placarVida();
     colisao();
@@ -477,6 +495,7 @@ int main(int argc, char** argv){
     glutKeyboardFunc(teclaMovendo);
     glutKeyboardUpFunc(teclaSolta);
     glutTimerFunc(16, moverJogador, 0);
+    glutTimerFunc(16,update4,0);
     glutTimerFunc(16,update3,0);
     glutTimerFunc(16,update2,0);
     glutTimerFunc(16,update,0);
