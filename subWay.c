@@ -635,8 +635,16 @@ void mostrarScoreboard(){
 
     // === MOSTRAR TOP 5 MELHORES ===
     for(int i = 0; i < quantidadeJogadores && i < 5; i++){
+        
+        // Verifica se o jogador da lista é o jogador atual, se sim, pinta de amarelo, se não, pinta de branco
+        if(strcmp(nomesJogadores[i], nomeJogador) == 0){
+            glColor3ub(255, 220, 0);
+        }
+        else{
+            glColor3ub(255, 255, 255);
+        }
         glRasterPos2f(-0.12, posicaoTextoY);
-        sprintf(texto, "%s - %d", nomesJogadores[i], pontuacoes[i]);
+        sprintf(texto, "%d. %s - %d", i + 1, nomesJogadores[i], pontuacoes[i]);
 
         for(int j = 0; texto[j] != '\0'; j++){
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, texto[j]);
