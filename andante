@@ -13,10 +13,11 @@ float xPOS, yPOS;
 char texto[100];
 
 // Quantidade de vidas do jogador
-int vida = 3;
+int vida = 5;
 
 // Pontuação atual do jogador
 int pontos = 0;
+
 
 // Controla se o jogador está colidindo com algum obstáculo, isso evita perder várias vidas ao mesmo tempo
 int emColisao = 0;
@@ -53,6 +54,10 @@ float obstaculo3X = 0.20;
 // Obstáculo rosa
 float obstaculo4Y = -1.0;
 float obstaculo4X = 0.56;
+
+// Obstáculo teste
+float obstaculoGY = 0.9;
+float obstaculoGX = 0.5;
 
 // === CONFIGURAÇÕES DO MAPA ====
 float tamanhoX = 0.056;
@@ -248,7 +253,7 @@ void moverObstaculoVerde(int value){
         obstaculo2Y = 1.0;
     }
     glutPostRedisplay();
-    glutTimerFunc(10,moverObstaculoVerde,0);
+    glutTimerFunc(6,moverObstaculoVerde,0);
 }
 
 // SPRITE: CARRO OBSTÁCULO 3 (AZUL)
@@ -317,7 +322,7 @@ void moverObstaculoAzul(int value){
         obstaculo3Y = -1.0;
     }
     glutPostRedisplay();
-    glutTimerFunc(8,moverObstaculoAzul,0);
+    glutTimerFunc(6,moverObstaculoAzul,0);
 }
 
 // SPRITE: CARRO OBSTÁCULO 4 (ROSA)
@@ -389,7 +394,49 @@ void moverObstaculoRosa(int value){
     glutTimerFunc(10,moverObstaculoRosa,0);
 }
 
+//teste
+int GASOLINA[11][10] = {
+    {1, 1, 0, 2, 2, 2, 2, 0, 0, 0},
+    {1, 1, 1, 2, 0, 0, 2, 2, 0, 0},
+    {0, 1, 1, 2, 2, 2, 2, 2, 2, 0},
+    {0, 1, 1, 2, 2, 2, 2, 2, 2, 0},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+    {0, 2, 3, 1, 1, 1, 1, 3, 2, 0},
+    {0, 2, 3, 1, 3, 3, 3, 3, 2, 0},
+    {0, 2, 3, 1, 3, 1, 1, 3, 2, 0},
+    {0, 2, 3, 1, 3, 3, 1, 3, 2, 0},
+    {0, 2, 3, 1, 1, 1, 1, 3, 2, 0},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+};
 
+// === RENDERIZA A GASOLINA NA TELA ===
+void desenharGASOLINA(){
+     for(int l = 0; l < 11; l++){           // percorre linhas da matriz
+        for(int c = 0; c < 10; c++){        // percorre colunas da matriz
+
+            // só desenha se não for 0
+            if(GASOLINA[l][c] != 0){
+
+                // define cor do pixel
+                if(GASOLINA[l][c] == 1) glColor3ub(0, 0, 0); 
+                if(GASOLINA[l][c] == 2) glColor3ub(255,0,0); 
+                if(GASOLINA[l][c] == 3) glColor3ub(255,255,255);
+            
+                // converte matriz para coordenada na tela
+                float x = c * 0.0090 - 0.09; 
+                float y = -l * 0.0090 - 0.011;
+
+                // desenha um quadrado (pixel)
+                glBegin(GL_QUADS);
+                    glVertex2f(x, y);
+                    glVertex2f(x + 0.0090, y);
+                    glVertex2f(x + 0.0090, y + 0.0090);
+                    glVertex2f(x, y + 0.0090);
+                glEnd();
+            }
+        }
+    }
+}
 
 // === MAPA DA PISTA ===
 int mapa[25][25] = {
@@ -461,7 +508,7 @@ void teclaMovendo(unsigned char key, int a, int b){
         podeSalvar = 0;
 
         // Reinicia status do jogador
-        vida = 3;       // volta com 3 vidas
+        vida = 5;       // volta com 3 vidas
         pontos = 0;     // zera a pontuação
 
         // Volta o jogador para posição inicial
@@ -541,7 +588,7 @@ void verificarColisao(){
     float distYObst1 = yPOS - obstaculo1Y;
 
     // distância entre jogador e obstáculo 2 - Verde
-    float distXObst2 = xPOS - obstaculo2X + 0.1;
+    float distXObst2 = xPOS - obstaculo2X;
     float distYObst2 = yPOS - obstaculo2Y;
 
     // distância entre jogador e obstáculo 3 - Azul
@@ -551,6 +598,11 @@ void verificarColisao(){
     // distância entre jogador e obstáculo 4 - Rosa
     float distXObst4 = xPOS - obstaculo4X;
     float distYObst4 = yPOS - obstaculo4Y;
+
+    // distância entre jogador e gasolina
+    float distXgas = xPOS - obstaculoGX;
+    float distYgas = yPOS - obstaculoGY;
+
 
     // === colisão com obstáculo 1 ===
     if(distXObst1 < 0.09 && distXObst1 > -0.09 && distYObst1 < 0.18 && distYObst1 > -0.18){
@@ -571,12 +623,13 @@ void verificarColisao(){
     if(distXObst2 < 0.09 && distXObst2 > -0.09 && distYObst2 < 0.18 && distYObst2 > -0.18){
 
         if(emColisao == 0){
-            vida = vida - 1;
-            emColisao = 1;
-            obstaculo2Y = 2.2;
+            vida = vida - 1;        // perde uma vida
+            emColisao = 1;          // ativa estado de colisão
+            obstaculo2Y = 2.2;      // reseta posição do obstaculo
         }
     } 
     else {
+         // libera colisão quando sai do obstáculo
         emColisao = 0;
     }
 
@@ -593,7 +646,7 @@ void verificarColisao(){
         emColisao = 0;
     }
 
-    // === colisão com obstáculo 3 ===
+    // === colisão com obstáculo 4 ===
     if(distXObst4 < 0.09 && distXObst4 > -0.09 && distYObst4 < 0.18 && distYObst4 > -0.18){
 
         if(emColisao == 0){
@@ -605,6 +658,20 @@ void verificarColisao(){
     else {
         emColisao = 0;
     }
+
+    // === colisão com gasolina ===
+    if(distXgas < 0.09 && distXgas > -0.09 && distYgas < 0.18 && distYgas > -0.18){
+
+        if(emColisao == 0){
+            
+            emColisao = 1;
+            obstaculoGY = -2.2;
+        }
+    } 
+    else {
+        emColisao = 0;
+    }
+
 }
 
 void carregarScore(){
@@ -866,6 +933,12 @@ void display(){
     glPushMatrix();
     glTranslatef(obstaculo4X,obstaculo4Y,0);
     desenharCarroRosa();
+    glPopMatrix();
+
+    // === GASOLINA ===
+    glPushMatrix();
+    glTranslatef(obstaculoGX,obstaculoGY,0);
+    desenharGASOLINA();
     glPopMatrix();
 
     // === LÓGICA DO JOGO ===
