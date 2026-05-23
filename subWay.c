@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 // Controlam o movimento do jogador
 int moveEsq, moveDir, moveCima, moveBaixo;
@@ -13,7 +14,7 @@ float xPOS, yPOS;
 char texto[100];
 
 // Quantidade de vidas do jogador
-int vida = 3;
+int vida = 5;
 
 // Pontuação atual do jogador
 int pontos = 0;
@@ -49,6 +50,14 @@ float obstaculo2X = -0.11;
 // Obstáculo azul
 float obstaculo3Y = -1.0;
 float obstaculo3X = 0.20;
+
+// Obstáculo rosa
+float obstaculo4Y = -1.0;
+float obstaculo4X = 0.56;
+
+// Obstáculo teste
+float obstaculoGY = 0.5;
+float obstaculoGX = 0.5;
 
 // === CONFIGURAÇÕES DO MAPA ====
 float tamanhoX = 0.056;
@@ -244,7 +253,7 @@ void moverObstaculoVerde(int value){
         obstaculo2Y = 1.0;
     }
     glutPostRedisplay();
-    glutTimerFunc(10,moverObstaculoVerde,0);
+    glutTimerFunc(6,moverObstaculoVerde,0);
 }
 
 // SPRITE: CARRO OBSTÁCULO 3 (AZUL)
@@ -313,7 +322,120 @@ void moverObstaculoAzul(int value){
         obstaculo3Y = -1.0;
     }
     glutPostRedisplay();
-    glutTimerFunc(8,moverObstaculoAzul,0);
+    glutTimerFunc(6,moverObstaculoAzul,0);
+}
+
+// SPRITE: CARRO OBSTÁCULO 4 (ROSA)
+int obstaculoRosa[20][10] = {
+    {0, 0, 0, 2, 2, 2, 2, 0, 0, 0},
+    {0, 0, 2, 2, 2, 2, 2, 2, 0, 0},
+    {0, 2, 3, 3, 2, 2, 3, 3, 2, 0},
+    {1, 2, 2, 2, 2, 2, 2, 2, 2, 1},
+    {1, 2, 2, 1, 1, 1, 1, 2, 2, 1},
+    {1, 2, 1, 1, 1, 1, 1, 1, 2, 1},
+    {0, 2, 1, 1, 1, 1, 1, 1, 2, 0},
+    {0, 2, 1, 3, 2, 2, 3, 1, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {0, 2, 2, 3, 2, 2, 3, 2, 2, 0},
+    {1, 2, 2, 3, 2, 2, 3, 2, 2, 1},
+    {1, 2, 2, 1, 1, 1, 1, 2, 2, 1},
+    {1, 2, 2, 2, 1, 1, 2, 2, 2, 1},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+};
+
+// === RENDERIZA O CARRO ROSA NA TELA ===
+void desenharCarroRosa(){
+     for(int l = 0; l < 20; l++){           // percorre linhas da matriz
+        for(int c = 0; c < 10; c++){        // percorre colunas da matriz
+
+            // só desenha se não for 0
+            if(obstaculoRosa[l][c] != 0){
+
+                // define cor do pixel
+                if(obstaculoRosa[l][c] == 1) glColor3ub(0, 0, 0); 
+                if(obstaculoRosa[l][c] == 2) glColor3ub(255,0,255); 
+                if(obstaculoRosa[l][c] == 3) glColor3ub(255,255,255);
+            
+                // converte matriz para coordenada na tela
+                float x = c * 0.0090 - 0.09; 
+                float y = -l * 0.0090 - 0.011;
+
+                // desenha um quadrado (pixel)
+                glBegin(GL_QUADS);
+                    glVertex2f(x, y);
+                    glVertex2f(x + 0.0090, y);
+                    glVertex2f(x + 0.0090, y + 0.0090);
+                    glVertex2f(x, y + 0.0090);
+                glEnd();
+            }
+        }
+    }
+}
+
+// === LÓGICA DE MOVIMENTO DO OBSTÁCULO ROSA ===
+void moverObstaculoRosa(int value){
+    
+    // Move o obstáculo para cima a cada atualização
+    obstaculo4Y += 0.01;
+
+    // Se o obstáculo sair da tela
+    if(obstaculo4Y > 1.1){
+
+        // Reseta posição vertical para o baixo da tela
+        obstaculo4Y = -1.0;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(10,moverObstaculoRosa,0);
+}
+
+// SPRITE: GASOLINA
+int gasolina[11][10] = {
+    {1, 1, 0, 2, 2, 2, 2, 0, 0, 0},
+    {1, 1, 1, 2, 0, 0, 2, 2, 0, 0},
+    {0, 1, 1, 2, 2, 2, 2, 2, 2, 0},
+    {0, 1, 1, 2, 2, 2, 2, 2, 2, 0},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+    {0, 2, 3, 1, 1, 1, 1, 3, 2, 0},
+    {0, 2, 3, 1, 3, 3, 3, 3, 2, 0},
+    {0, 2, 3, 1, 3, 1, 1, 3, 2, 0},
+    {0, 2, 3, 1, 3, 3, 1, 3, 2, 0},
+    {0, 2, 3, 1, 1, 1, 1, 3, 2, 0},
+    {0, 2, 2, 2, 2, 2, 2, 2, 2, 0},
+};
+
+// === RENDERIZA A GASOLINA NA TELA ===
+void desenharGasolina(){
+     for(int l = 0; l < 11; l++){           // percorre linhas da matriz
+        for(int c = 0; c < 10; c++){        // percorre colunas da matriz
+
+            // só desenha se não for 0
+            if(gasolina[l][c] != 0){
+
+                // define cor do pixel
+                if(gasolina[l][c] == 1) glColor3ub(0, 0, 0); 
+                if(gasolina[l][c] == 2) glColor3ub(255,0,0); 
+                if(gasolina[l][c] == 3) glColor3ub(255,255,255);
+            
+                // converte matriz para coordenada na tela
+                float x = c * 0.0090 - 0.09; 
+                float y = -l * 0.0090 - 0.011;
+
+                // desenha um quadrado (pixel)
+                glBegin(GL_QUADS);
+                    glVertex2f(x, y);
+                    glVertex2f(x + 0.0090, y);
+                    glVertex2f(x + 0.0090, y + 0.0090);
+                    glVertex2f(x, y + 0.0090);
+                glEnd();
+            }
+        }
+    }
 }
 
 // === MAPA DA PISTA ===
@@ -386,7 +508,7 @@ void teclaMovendo(unsigned char key, int a, int b){
         podeSalvar = 0;
 
         // Reinicia status do jogador
-        vida = 3;       // volta com 3 vidas
+        vida = 5;       // volta com 3 vidas
         pontos = 0;     // zera a pontuação
 
         // Volta o jogador para posição inicial
@@ -402,6 +524,9 @@ void teclaMovendo(unsigned char key, int a, int b){
 
         obstaculo3X = 0.20;
         obstaculo3Y = -1.0;
+
+        obstaculo4X = 0.56;
+        obstaculo4Y = -1.0;
 
         // Restaura tamanho do mapa
         tamanhoX =  0.056;
@@ -449,6 +574,7 @@ void moverJogador(int valor){
         obstaculo1X = -5.0;
         obstaculo2X = -5.0;
         obstaculo3X = -5.0;
+        obstaculo4X = -5.0;
     }
     glutTimerFunc(5, moverJogador, 0);
     glutPostRedisplay();
@@ -469,6 +595,15 @@ void verificarColisao(){
     float distXObst3 = xPOS - obstaculo3X;
     float distYObst3 = yPOS - obstaculo3Y;
 
+    // distância entre jogador e obstáculo 4 - Rosa
+    float distXObst4 = xPOS - obstaculo4X;
+    float distYObst4 = yPOS - obstaculo4Y;
+
+    // distância entre jogador e gasolina
+    float distXgas = xPOS - obstaculoGX;
+    float distYgas = yPOS - obstaculoGY;
+
+
     // === colisão com obstáculo 1 ===
     if(distXObst1 < 0.09 && distXObst1 > -0.09 && distYObst1 < 0.18 && distYObst1 > -0.18){
 
@@ -477,23 +612,25 @@ void verificarColisao(){
             vida = vida - 1;        // perde uma vida
             emColisao = 1;          // ativa estado de colisão
             obstaculo1Y = 2.2;      // reseta posição do obstáculo
-        } 
+    } 
     else {
         // libera colisão quando sai do obstáculo
         emColisao = 0;
+        }
     }
-}
 
     // === colisão com obstáculo 2 ===
     if(distXObst2 < 0.09 && distXObst2 > -0.09 && distYObst2 < 0.18 && distYObst2 > -0.18){
 
+        // evita descontar vida várias vezes seguidas
         if(emColisao == 0){
-            vida = vida - 1;
-            emColisao = 1;
-            obstaculo2Y = 2.2;
+            vida = vida - 1;        // perde uma vida
+            emColisao = 1;          // ativa estado de colisão
+            obstaculo2Y = 2.2;      // reseta posição do obstaculo
         }
     } 
     else {
+         // libera colisão quando sai do obstáculo
         emColisao = 0;
     }
 
@@ -506,6 +643,34 @@ void verificarColisao(){
             obstaculo3Y = -2.2;
         }
     } 
+    else {
+        emColisao = 0;
+    }
+
+    // === colisão com obstáculo 4 ===
+    if(distXObst4 < 0.09 && distXObst4 > -0.09 && distYObst4 < 0.18 && distYObst4 > -0.18){
+
+        if(emColisao == 0){
+            vida = vida - 1;
+            emColisao = 1;
+            obstaculo4Y = -2.2;
+        }
+    } 
+    else {
+        emColisao = 0;
+    }
+
+    // === colisão com gasolina ===
+    if(distXgas < 0.05 && distXgas > -0.05 && distYgas < 0.18 && distYgas > -0.18){
+        if(emColisao == 0){
+
+            // // gera um número aleatório entre 0 e 99, divide por 100.0 para virar float (0.0 a 0.99) e subtrai 0.50 para o resultado ficar entre -0.50 e 0.49
+            obstaculoGX = (rand() % 100) / 100.0 - 0.50;
+            obstaculoGY = (rand() % 100) / 100.0 - 0.30;
+            emColisao = 1;
+            vida = vida + 1;
+        }
+    }
     else {
         emColisao = 0;
     }
@@ -635,16 +800,8 @@ void mostrarScoreboard(){
 
     // === MOSTRAR TOP 5 MELHORES ===
     for(int i = 0; i < quantidadeJogadores && i < 5; i++){
-        
-        // Verifica se o jogador da lista é o jogador atual, se sim, pinta de amarelo, se não, pinta de branco
-        if(strcmp(nomesJogadores[i], nomeJogador) == 0){
-            glColor3ub(255, 220, 0);
-        }
-        else{
-            glColor3ub(255, 255, 255);
-        }
         glRasterPos2f(-0.12, posicaoTextoY);
-        sprintf(texto, "%d. %s - %d", i + 1, nomesJogadores[i], pontuacoes[i]);
+        sprintf(texto, "%s - %d", nomesJogadores[i], pontuacoes[i]);
 
         for(int j = 0; texto[j] != '\0'; j++){
             glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, texto[j]);
@@ -722,7 +879,6 @@ void gameOver(){
             glVertex2f(-0.50, 0.65);
         glEnd();
 
-
         // Borda
         glColor3ub(255, 220, 0);
         glBegin(GL_LINE_LOOP);
@@ -774,6 +930,18 @@ void display(){
     desenharCarroAzul();
     glPopMatrix();
 
+    // === OBSTÁCULO 4 ===
+    glPushMatrix();
+    glTranslatef(obstaculo4X,obstaculo4Y,0);
+    desenharCarroRosa();
+    glPopMatrix();
+
+    // === GASOLINA ===
+    glPushMatrix();
+    glTranslatef(obstaculoGX,obstaculoGY,0);
+    desenharGasolina();
+    glPopMatrix();
+
     // === LÓGICA DO JOGO ===
     verificarColisao();
     gameOver();
@@ -786,6 +954,8 @@ void display(){
 
 // === INICIALIZAÇÂO DO JOGO ===
 int main(int argc, char** argv){
+    // inicializa o gerador de números aleatórios usando o tempo atual como semente, sem isso o rand() sempre geraria a mesma sequência de números toda vez que o jogo rodar
+    srand(time(NULL));
 
     // Mensagem inicial no terminal
     printf("=======================\n");
@@ -808,6 +978,7 @@ int main(int argc, char** argv){
     glutKeyboardUpFunc(teclaSolta);     // tecla solta
 
     glutTimerFunc(16, moverJogador, 0);             // movimento do jogador
+    glutTimerFunc(16,moverObstaculoRosa,0);         // movimento obstáculo rosa
     glutTimerFunc(16,moverObstaculoAzul,0);         // movimento obstáculo azul
     glutTimerFunc(16,moverObstaculoVerde,0);        // movimento obstáculo verde
     glutTimerFunc(16,moverObstaculoAmarelo,0);      // movimento obstáculo amarelo
