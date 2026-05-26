@@ -16,7 +16,7 @@ char texto[100];
 int vida = 5;
 
 // Pontuação atual do jogador
-int pontos = 0;
+int pontos = 1;
 
 
 // Controla se o jogador está colidindo com algum obstáculo, isso evita perder várias vidas ao mesmo tempo
@@ -57,7 +57,7 @@ float obstaculo4X = 0.56;
 
 // Obstáculo teste
 float obstaculoGY = 0.9;
-float obstaculoGX = 0.5;
+float obstaculoGX = 0.05;
 
 // === CONFIGURAÇÕES DO MAPA ====
 float tamanhoX = 0.056;
@@ -528,6 +528,9 @@ void teclaMovendo(unsigned char key, int a, int b){
         obstaculo4X = 0.56;
         obstaculo4Y = -1.0;
 
+        obstaculoGY = 0.9;
+        obstaculoGX = 0.05;
+
         // Restaura tamanho do mapa
         tamanhoX =  0.056;
     }
@@ -600,7 +603,8 @@ void verificarColisao(){
     float distYObst4 = yPOS - obstaculo4Y;
 
     // distância entre jogador e gasolina
-    float distXgas = xPOS - obstaculoGX;
+    float distXgas = xPOS - obstaculoGX + 0.1;
+    float distXGAS = xPOS - obstaculoGX - 0.1;
     float distYgas = yPOS - obstaculoGY;
 
 
@@ -622,6 +626,7 @@ void verificarColisao(){
     // === colisão com obstáculo 2 ===
     if(distXObst2 < 0.09 && distXObst2 > -0.09 && distYObst2 < 0.18 && distYObst2 > -0.18){
 
+        // evita descontar vida várias vezes seguidas
         if(emColisao == 0){
             vida = vida - 1;        // perde uma vida
             emColisao = 1;          // ativa estado de colisão
@@ -636,39 +641,49 @@ void verificarColisao(){
     // === colisão com obstáculo 3 ===
     if(distXObst3 < 0.09 && distXObst3 > -0.09 && distYObst3 < 0.18 && distYObst3 > -0.18){
 
+        // evita descontar vida várias vezes seguidas
         if(emColisao == 0){
-            vida = vida - 1;
-            emColisao = 1;
-            obstaculo3Y = -2.2;
+            vida = vida - 1;       // perde uma vida
+            emColisao = 1;         // ativa estado de colisão
+            obstaculo3Y = -2.2;    // reseta posição do obstaculo
         }
     } 
     else {
+        // libera colisão quando sai do obstáculo
         emColisao = 0;
     }
 
     // === colisão com obstáculo 4 ===
     if(distXObst4 < 0.09 && distXObst4 > -0.09 && distYObst4 < 0.18 && distYObst4 > -0.18){
 
+        // evita descontar vida várias vezes seguidas
         if(emColisao == 0){
-            vida = vida - 1;
-            emColisao = 1;
-            obstaculo4Y = -2.2;
+            vida = vida - 1;      // perde uma vida
+            emColisao = 1;        // ativa estado de colisão
+            obstaculo4Y = -2.2;   // reseta posição do obstaculo
         }
     } 
     else {
+         // libera colisão quando sai do obstáculo
         emColisao = 0;
     }
 
     // === colisão com gasolina ===
     if(distXgas < 0.09 && distXgas > -0.09 && distYgas < 0.18 && distYgas > -0.18){
-
+        
+ 
+        // evita descontar vida várias vezes seguidas
         if(emColisao == 0){
-            
-            emColisao = 1;
-            obstaculoGY = -2.2;
+            vida = vida + 1;      // ganha uma vida
+            emColisao = 1;        // ativa estado de colisão
+            obstaculoGY = -2.2;   // reseta posição do obstaculo
+        
         }
+        obstaculoGX = ((rand() %18) -9) * 0.1 - 0.12;
+        obstaculoGY = ((rand() %18) -9) * 0.1;
     } 
     else {
+        // libera colisão quando sai do obstáculo
         emColisao = 0;
     }
 
@@ -826,9 +841,15 @@ void atualizarPontos(int valor){
         pontos++;    // aumenta enquanto vivo
     }
 
+   if( pontos == 50 ){
+    vida = vida - 1;
+   }
+   
+   
     // Chame essa função a cada 100 milissegundo
     glutTimerFunc(100, atualizarPontos, 0);
 }
+
 
 // === PLACAR DE PONTOS ===
 void placarPontos(){
@@ -903,6 +924,8 @@ void display(){
         // Marca que o score já foi salvo para evitar salvar várias vezes, isso impede que o display() salve o score repetidamente a cada frame
         podeSalvar = 1;
     }
+
+
     desenharMapa();
 
     // === JOGADOR ===
@@ -979,7 +1002,6 @@ int main(int argc, char** argv){
     glutTimerFunc(16,moverObstaculoAzul,0);         // movimento obstáculo azul
     glutTimerFunc(16,moverObstaculoVerde,0);        // movimento obstáculo verde
     glutTimerFunc(16,moverObstaculoAmarelo,0);      // movimento obstáculo amarelo
-
 
     glutTimerFunc(100, atualizarPontos, 0);         // sistema de pontuação
     glutDisplayFunc(display);
