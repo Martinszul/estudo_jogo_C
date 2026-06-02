@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 // ========================
 // PROTÓTIPOS
@@ -589,6 +590,9 @@ void teclaMovendo(unsigned char key, int a, int b){
         obstaculo4X = 0.56;
         obstaculo4Y = -1.0;
 
+        obstaculoGX = 0.0;
+        obstaculoGY = 0.0;
+
         // Reinicia perda automática de vidas
         glutTimerFunc(1000, perderVida, 0);
 
@@ -647,6 +651,8 @@ void moverJogador(int valor){
         obstaculo2X = -5.0;
         obstaculo3X = -5.0;
         obstaculo4X = -5.0;
+        obstaculoGX = -5.0;
+        
     }
     glutTimerFunc(5, moverJogador, 0);
     glutPostRedisplay();
