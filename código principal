@@ -666,25 +666,24 @@ void moverJogador(int valor){
 void verificarColisao(){
 
     // Distância entre jogador e objetos
-    float carroEsq = xPOS - 0.045;
-    float carroDir = xPOS + 0.045;    
-    float carroCima = yPOS + 0.09;    
-    float carroBaixo = yPOS - 0.09;
 
-    float obstEsq = obstaculo1X - 0.045;
-    float obstDir = obstaculo1X + 0.045;
-    float obstCima = obstaculo1Y + 0.09;
-    float obstBaixo = obstaculo1Y - 0.09;
+    // distância entre jogador e obstáculo 1 - Amarelo
+    float distXObst1 = xPOS - obstaculo1X + 0.1;
+    float distYObst1 = yPOS - obstaculo1Y;
 
+    // distância entre jogador e obstáculo 2 - Verde
     float distXObst2 = xPOS - obstaculo2X;
     float distYObst2 = yPOS - obstaculo2Y;
 
+    // distância entre jogador e obstáculo 3 - Azul
     float distXObst3 = xPOS - obstaculo3X;
     float distYObst3 = yPOS - obstaculo3Y;
 
+    // distância entre jogador e obstáculo 4 - Rosa
     float distXObst4 = xPOS - obstaculo4X;
     float distYObst4 = yPOS - obstaculo4Y;
 
+    // distância entre jogador e gasolina
     float distXgas = xPOS - obstaculoGX;
     float distYgas = yPOS - obstaculoGY;
 
@@ -692,7 +691,7 @@ void verificarColisao(){
     emColisao = 0;
 
     // Obstáculo amarelo
-    if(carroDir > obstEsq && carroEsq < obstDir && carroCima > obstBaixo && carroBaixo < obstCima){
+    if(distXObst1 < 0.09 && distXObst1 > -0.09 && distYObst1 < 0.18 && distYObst1 > -0.18){
 
         // perde uma vida
         vida = vida - 2;
@@ -707,24 +706,33 @@ void verificarColisao(){
     // Obstáculo verde
     if(!emColisao && distXObst2 < 0.09 && distXObst2 > -0.09 && distYObst2 < 0.18 && distYObst2 > -0.18){
 
+        // perde uma vida
         vida = vida - 3;
+        // ativa estado de colisão
         emColisao = 1;
+        // reseta posição do obstáculo
         obstaculo2Y = 2.2;
     }
 
     // Obstáculo azul
     if(!emColisao && distXObst3 < 0.09 && distXObst3 > -0.09 && distYObst3 < 0.18 && distYObst3 > -0.18){
 
+        // perde uma vida
         vida = vida - 3;
+        // ativa estado de colisão
         emColisao = 1;
+        // reseta posição do obstáculo
         obstaculo3Y = -2.2;
     }
 
     // Obstáculo rosa
     if(!emColisao && distXObst4 < 0.09 && distXObst4 > -0.09 && distYObst4 < 0.18 && distYObst4 > -0.18){
 
+        // perde uma vida
         vida = vida - 2;
+        // ativa estado de colisão
         emColisao = 1;
+        // reseta posição do obstáculo
         obstaculo4Y = -2.2;
     }
 
@@ -734,7 +742,9 @@ void verificarColisao(){
         // gera um número aleatório entre 0 e 99, divide por 100.0 para virar float (0.0 a 0.99) e subtrai 0.50 para o resultado ficar entre -0.50 e 0.49
         obstaculoGX = (rand() % 100) / 100.0 - 0.50;
         obstaculoGY = (rand() % 100) / 100.0 - 0.30;
+        // ativa estado de colisão
         emColisao = 1;
+        // ganha uma vida
         vida = vida + 1;
     }
 }
