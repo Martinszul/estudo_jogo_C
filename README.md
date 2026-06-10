@@ -27,7 +27,7 @@ O jogo termina quando o jogador perde todas as vidas. Ao final, é exibida uma t
 
 - O jogador começa com 5 vidas
 - 1 vida é perdida automaticamente a cada 1,5 segundo
-- Colisões com obstáculos reduzem vidas adicionalmente
+- Colisões com obstáculos reduzem vidas
 - Coletar gasolina recupera +1 vida
 - Ao chegar em 0 vidas, o jogo encerra
 
