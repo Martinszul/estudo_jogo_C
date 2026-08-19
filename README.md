@@ -58,3 +58,4 @@ Ao perder todas as vidas, é exibida uma tela contendo:
 ## Autores
 
 Arthur Martins Zulato Moreira e Gabriel Landim Marcelino
+. 
