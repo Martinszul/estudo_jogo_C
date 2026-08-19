@@ -46,7 +46,7 @@ O jogo termina quando o jogador perde todas as vidas. Ao final, é exibida uma t
 - `D` → ➡️ Mover para direita
 - `R` → 🔄 Reiniciar (após Game Over)
 
-## Tela de Game Over
+## Tela de Game Over !
 
 Ao perder todas as vidas, é exibida uma tela contendo:
 
